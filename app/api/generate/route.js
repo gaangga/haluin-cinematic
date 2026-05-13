@@ -1,5 +1,9 @@
 import { uploadToR2 } from "@/lib/r2";
 
+function sleep(ms) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 export async function POST(req) {
   try {
     const { prompt } = await req.json();
@@ -11,28 +15,39 @@ export async function POST(req) {
       );
     }
 
-    const runpodRes = await fetch(
-      `https://api.runpod.ai/v2/${process.env.RUNPOD_ENDPOINT_ID}/runsync`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${process.env.RUNPOD_API_KEY}`,
-        },
-        body: JSON.stringify({
-          input: {
-            prompt,
-          },
-        }),
-      }
-    );
+    let runpodData = null;
 
-    const runpodData = await runpodRes.json();
+    // Try runsync several times because RunPod Flash can return IN_QUEUE when cold
+    for (let attempt = 1; attempt <= 6; attempt++) {
+      const runpodRes = await fetch(
+        `https://api.runpod.ai/v2/${process.env.RUNPOD_ENDPOINT_ID}/runsync`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${process.env.RUNPOD_API_KEY}`,
+          },
+          body: JSON.stringify({
+            input: {
+              prompt,
+            },
+          }),
+        }
+      );
+
+      runpodData = await runpodRes.json();
+
+      if (runpodData.status === "COMPLETED") {
+        break;
+      }
+
+      await sleep(5000);
+    }
 
     if (runpodData.status !== "COMPLETED") {
       return Response.json({
         success: false,
-        message: "RunPod job not completed yet",
+        message: "RunPod job still not completed. Try again after worker is warm.",
         runpodData,
       });
     }
@@ -45,6 +60,7 @@ export async function POST(req) {
     if (!imageBase64) {
       return Response.json(
         {
+          success: false,
           error: "No image_base64 returned from RunPod",
           runpodData,
         },
