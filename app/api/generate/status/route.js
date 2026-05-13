@@ -1,4 +1,5 @@
 import { uploadToR2 } from "@/lib/r2";
+import { addGalleryItem } from "@/lib/galleryStore";
 
 export async function POST(req) {
   try {
@@ -61,19 +62,21 @@ export async function POST(req) {
     });
 
     const item = {
-      url: publicUrl,
-      type: "image",
-      width,
-      height,
-      prompt,
-      createdAt: new Date().toISOString(),
-    };
+  url: publicUrl,
+  type: "image",
+  width,
+  height,
+  prompt,
+  createdAt: new Date().toISOString(),
+};
 
-    return Response.json({
-      success: true,
-      completed: true,
-      item,
-    });
+await addGalleryItem(item);
+
+return Response.json({
+  success: true,
+  completed: true,
+  item,
+});
   } catch (error) {
     return Response.json(
       {
