@@ -1,6 +1,20 @@
+import { checkPromptSafety } from "@/lib/safety";
 export async function POST(req) {
   try {
     const { prompt } = await req.json();
+    const safety = checkPromptSafety(prompt);
+
+if (!safety.safe) {
+  return Response.json(
+    {
+      success: false,
+      blocked: true,
+      error: "This prompt is not allowed.",
+      reason: safety.reason,
+    },
+    { status: 400 }
+  );
+}
 
     if (!prompt) {
       return Response.json(
