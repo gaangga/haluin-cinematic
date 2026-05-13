@@ -155,8 +155,8 @@ export default function Home() {
             </h1>
 
             <p className="text-gray-400 leading-relaxed max-w-xl mb-8">
-              Premium cinematic generation powered by RunPod Flash and
-              Cloudflare R2 public gallery storage.
+              Best Indonesian ai generation website
+              will be your visual power house.
             </p>
 
             <div className="bg-white/5 border border-white/10 rounded-3xl p-4 backdrop-blur-xl max-w-2xl">
