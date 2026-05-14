@@ -47,7 +47,7 @@ export default function Home() {
           </div>
 
           <h1 className="mx-auto max-w-5xl text-6xl font-semibold leading-[0.95] tracking-[-0.05em] text-white md:text-8xl lg:text-9xl">
-            Under develop
+            Under development
           </h1>
 
           <p className="mx-auto mt-8 max-w-3xl text-base leading-8 text-white/70 md:text-xl">
