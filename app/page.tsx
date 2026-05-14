@@ -14,7 +14,7 @@ export default function Home() {
           playsInline
           className="h-full w-full object-cover opacity-60"
         >
-          <source src="/cinematic.mp4" type="video/mp4" />
+          <source src="/cinematic02.mp4" type="video/mp4" />
         </video>
 
         <div className="absolute inset-0 bg-black/55" />
