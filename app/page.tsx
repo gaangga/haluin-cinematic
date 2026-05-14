@@ -12,7 +12,7 @@ export default function Home() {
           muted
           loop
           playsInline
-          className="h-full w-full object-cover opacity-45"
+          className="h-full w-full object-cover opacity-60"
         >
           <source src="/cinematic.mp4" type="video/mp4" />
         </video>
